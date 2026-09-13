@@ -68,4 +68,14 @@ public class CategoryServiceImpl implements ICategoryService {
         }
         return null;
     }
+
+    @Override
+    public List<Category> searchPaginated(String keyword, int page, int pageSize) {
+        return cateDao.searchPaginated(keyword, page, pageSize);
+    }
+
+    @Override
+    public int countSearch(String keyword) {
+        return cateDao.countSearch(keyword);
+    }
 }

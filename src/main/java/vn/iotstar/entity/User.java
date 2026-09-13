@@ -10,7 +10,6 @@ import java.sql.Date;
 
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Table(name = "`User`")
 @NamedQueries({
@@ -55,6 +54,9 @@ public class User implements Serializable {
 
     @Column(name = "code")
     private String code;
+
+    public User() {
+    }
 
     public User(String email, String userName, String fullName, String passWord,
                 String avatar, int roleid, String phone, Date createdDate, int status, String code) {

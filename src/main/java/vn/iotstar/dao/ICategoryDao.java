@@ -12,5 +12,7 @@ public interface ICategoryDao {
     List<Category> findAll();
     List<Category> searchByName(String catname);
     List<Category> findAll(int page, int pagesize);
+    List<Category> searchPaginated(String keyword, int page, int pageSize);
+    int countSearch(String keyword);
     int count();
 }

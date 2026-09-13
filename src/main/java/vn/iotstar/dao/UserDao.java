@@ -1,5 +1,6 @@
 package vn.iotstar.dao;
 
+import java.util.List;
 import vn.iotstar.entity.User;
 
 public interface UserDao {
@@ -8,6 +9,11 @@ public interface UserDao {
     User getByEmail(String email);
     void insert(User user);
     void update(User user);
+    void delete(int id);
+    List<User> findAll();
+    List<User> searchPaginated(String keyword, int page, int pageSize);
+    int countSearch(String keyword);
+    int count();
     boolean checkExistEmail(String email);
     boolean checkExistUsername(String username);
     boolean checkExistPhone(String phone);

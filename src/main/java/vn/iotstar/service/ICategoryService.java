@@ -13,4 +13,6 @@ public interface ICategoryService {
     void delete(int cateid) throws Exception;
     void update(Category category);
     Category findByCategoryname(String name);
+    List<Category> searchPaginated(String keyword, int page, int pageSize);
+    int countSearch(String keyword);
 }

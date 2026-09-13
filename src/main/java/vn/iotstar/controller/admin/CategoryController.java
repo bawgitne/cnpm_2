@@ -34,8 +34,34 @@ public class CategoryController extends HttpServlet {
         String url = req.getRequestURI();
 
         if (url.contains("/admin/categories")) {
-            List<Category> list = cateService.findAll();
+            String keyword = req.getParameter("keyword");
+            if (keyword == null) keyword = "";
+
+            String pageStr = req.getParameter("page");
+            int page = 1;
+            if (pageStr != null && !pageStr.trim().isEmpty()) {
+                try {
+                    page = Integer.parseInt(pageStr.trim());
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+            int pageSize = 5;
+
+            int totalItems = cateService.countSearch(keyword);
+            int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+            if (totalPages < 1) totalPages = 1;
+            if (page > totalPages) page = totalPages;
+
+            List<Category> list = cateService.searchPaginated(keyword, page, pageSize);
+
             req.setAttribute("listcate", list);
+            req.setAttribute("keyword", keyword);
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPages", totalPages);
+            req.setAttribute("totalItems", totalItems);
+            req.setAttribute("pageSize", pageSize);
+
             req.getRequestDispatcher("/views/admin/category-list.jsp").forward(req, resp);
         } else if (url.contains("/admin/category/add")) {
             req.getRequestDispatcher("/views/admin/category-add.jsp").forward(req, resp);

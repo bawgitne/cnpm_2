@@ -181,4 +181,77 @@ public class UserDaoImpl implements UserDao {
             enma.close();
         }
     }
+
+    @Override
+    public void delete(int id) {
+        EntityManager enma = JpaConfig.getEntityManager();
+        EntityTransaction trans = enma.getTransaction();
+        try {
+            trans.begin();
+            User user = enma.find(User.class, id);
+            if (user != null) {
+                enma.remove(user);
+            }
+            trans.commit();
+        } catch (Exception e) {
+            if (trans.isActive()) trans.rollback();
+            throw new RuntimeException("Không thể xóa user với id: " + id, e);
+        } finally {
+            enma.close();
+        }
+    }
+
+    @Override
+    public List<User> findAll() {
+        EntityManager enma = JpaConfig.getEntityManager();
+        try {
+            TypedQuery<User> query = enma.createNamedQuery("User.findAll", User.class);
+            return query.getResultList();
+        } finally {
+            enma.close();
+        }
+    }
+
+    @Override
+    public List<User> searchPaginated(String keyword, int page, int pageSize) {
+        EntityManager enma = JpaConfig.getEntityManager();
+        try {
+            String jpql = "SELECT u FROM User u WHERE u.userName LIKE :kw OR u.fullName LIKE :kw OR u.email LIKE :kw ORDER BY u.id DESC";
+            TypedQuery<User> query = enma.createQuery(jpql, User.class);
+            String kwParam = "%" + (keyword != null ? keyword.trim() : "") + "%";
+            query.setParameter("kw", kwParam);
+            int offset = (page > 0 ? page - 1 : 0) * pageSize;
+            query.setFirstResult(offset);
+            query.setMaxResults(pageSize);
+            return query.getResultList();
+        } finally {
+            enma.close();
+        }
+    }
+
+    @Override
+    public int countSearch(String keyword) {
+        EntityManager enma = JpaConfig.getEntityManager();
+        try {
+            String jpql = "SELECT count(u) FROM User u WHERE u.userName LIKE :kw OR u.fullName LIKE :kw OR u.email LIKE :kw";
+            TypedQuery<Long> query = enma.createQuery(jpql, Long.class);
+            String kwParam = "%" + (keyword != null ? keyword.trim() : "") + "%";
+            query.setParameter("kw", kwParam);
+            return query.getSingleResult().intValue();
+        } finally {
+            enma.close();
+        }
+    }
+
+    @Override
+    public int count() {
+        EntityManager enma = JpaConfig.getEntityManager();
+        try {
+            String jpql = "SELECT count(u) FROM User u";
+            TypedQuery<Long> query = enma.createQuery(jpql, Long.class);
+            return query.getSingleResult().intValue();
+        } finally {
+            enma.close();
+        }
+    }
 }

@@ -6,6 +6,7 @@ import vn.iotstar.entity.User;
 import vn.iotstar.service.UserService;
 import vn.iotstar.util.EmailUtil;
 
+import java.util.List;
 import java.util.Random;
 
 public class UserServiceImpl implements UserService {
@@ -14,6 +15,31 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(int id) {
         return userDao.findById(id);
+    }
+
+    @Override
+    public void delete(int id) {
+        userDao.delete(id);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userDao.findAll();
+    }
+
+    @Override
+    public List<User> searchPaginated(String keyword, int page, int pageSize) {
+        return userDao.searchPaginated(keyword, page, pageSize);
+    }
+
+    @Override
+    public int countSearch(String keyword) {
+        return userDao.countSearch(keyword);
+    }
+
+    @Override
+    public int count() {
+        return userDao.count();
     }
 
     @Override

@@ -138,6 +138,35 @@ public class CategoryDaoImpl implements ICategoryDao {
     }
 
     @Override
+    public List<Category> searchPaginated(String keyword, int page, int pageSize) {
+        EntityManager enma = JpaConfig.getEntityManager();
+        try {
+            String jpql = "SELECT c FROM Category c WHERE c.categoryname LIKE :keyword ORDER BY c.categoryid DESC";
+            TypedQuery<Category> query = enma.createQuery(jpql, Category.class);
+            query.setParameter("keyword", "%" + (keyword != null ? keyword.trim() : "") + "%");
+            int offset = (page > 0 ? page - 1 : 0) * pageSize;
+            query.setFirstResult(offset);
+            query.setMaxResults(pageSize);
+            return query.getResultList();
+        } finally {
+            enma.close();
+        }
+    }
+
+    @Override
+    public int countSearch(String keyword) {
+        EntityManager enma = JpaConfig.getEntityManager();
+        try {
+            String jpql = "SELECT count(c) FROM Category c WHERE c.categoryname LIKE :keyword";
+            Query query = enma.createQuery(jpql);
+            query.setParameter("keyword", "%" + (keyword != null ? keyword.trim() : "") + "%");
+            return ((Long) query.getSingleResult()).intValue();
+        } finally {
+            enma.close();
+        }
+    }
+
+    @Override
     public int count() {
         EntityManager enma = JpaConfig.getEntityManager();
         try {
