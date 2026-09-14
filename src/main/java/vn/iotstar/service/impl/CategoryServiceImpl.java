@@ -1,11 +1,13 @@
 package vn.iotstar.service.impl;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
 import vn.iotstar.dao.ICategoryDao;
 import vn.iotstar.dao.impl.CategoryDaoImpl;
 import vn.iotstar.entity.Category;
 import vn.iotstar.service.ICategoryService;
 
+@Service
 public class CategoryServiceImpl implements ICategoryService {
     public ICategoryDao cateDao = new CategoryDaoImpl();
 

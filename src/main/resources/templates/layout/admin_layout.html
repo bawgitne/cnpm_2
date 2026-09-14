@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">Thymeleaf Admin Portal</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header Styling */
+        .admin-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .admin-brand {
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: 0.5px;
+            color: #38bdf8 !important;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            min-height: calc(100vh - 70px);
+            background: #1e293b;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+        .sidebar .nav-link {
+            color: #94a3b8;
+            font-weight: 500;
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin: 4px 12px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .sidebar .nav-link i {
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+        .sidebar .nav-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(4px);
+        }
+        .sidebar .nav-link.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Content Container */
+        .main-content {
+            padding: 30px;
+            flex: 1;
+        }
+        .card-custom {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            background: #ffffff;
+        }
+        .card-header-custom {
+            background: #ffffff;
+            border-bottom: 1px solid #f1f5f9;
+            padding: 20px 25px;
+            border-top-left-radius: 12px !important;
+            border-top-right-radius: 12px !important;
+        }
+
+        /* Status badges */
+        .badge-status-active {
+            background-color: #dcfce7;
+            color: #166534;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+        .badge-status-inactive {
+            background-color: #fee2e2;
+            color: #991b1b;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .fs-7 { font-size: 0.85rem; }
+        .fs-8 { font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Fragment -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Main Container -->
+    <div class="container-fluid flex-grow-1">
+        <div class="row min-vh-100">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar px-0">
+                <div class="position-sticky pt-3">
+                    <div class="px-3 mb-3 text-uppercase text-secondary fs-8 fw-bold" style="letter-spacing: 1px;">Menu Quản Trị</div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" th:href="@{/admin/categories}">
+                                <i class="fa-solid fa-layer-group"></i> Quản Lý Danh Mục
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/categories}">
+                                <i class="fa-solid fa-box-archive"></i> Quản Lý Sản Phẩm
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/categories}">
+                                <i class="fa-solid fa-users-gear"></i> Quản Lý Người Dùng
+                            </a>
+                        </li>
+                    </ul>
+
+                    <hr class="my-4 mx-3 border-secondary border-opacity-25">
+
+                    <div class="px-3 mb-2 text-uppercase text-secondary fs-8 fw-bold" style="letter-spacing: 1px;">Chức năng Thymeleaf</div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/categories/add}">
+                                <i class="fa-solid fa-plus-circle"></i> Thêm Danh Mục Mới
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" th:href="@{/logout}">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng Xuất
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content Area -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div layout:fragment="content">
+                    <!-- Page content will be injected here -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer Fragment -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -134,6 +134,16 @@
             <artifactId>sitemesh</artifactId>
             <version>2.4.2</version>
         </dependency>
+
+        <!-- Thymeleaf & Layout Dialect -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>nz.net.ultraq.thymeleaf</groupId>
+            <artifactId>thymeleaf-layout-dialect</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

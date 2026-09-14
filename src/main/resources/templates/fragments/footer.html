@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <!-- Footer Fragment -->
+    <footer th:fragment="footer" class="admin-footer mt-auto py-4 bg-white border-top shadow-sm">
+        <div class="container-fluid px-4">
+            <div class="row align-items-center gy-3">
+                <div class="col-md-6 text-center text-md-start">
+                    <h6 class="fw-bold text-primary mb-1 d-flex align-items-center justify-content-center justify-content-md-start gap-2">
+                        <i class="fa-solid fa-graduation-cap"></i> TRƯỜNG ĐẠI HỌC SƯ PHẠM KỸ THUẬT TP.HCM (HCMUTE)
+                    </h6>
+                    <p class="text-muted small mb-0">
+                        Khoa Công Nghệ Thông Tin - Bộ Môn Công Nghệ Phần Mềm | Môn học: Lập Trình Web (WEBPR330479)
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="user-db-info p-2 px-3 bg-light rounded border d-inline-block text-start">
+                        <div class="fw-bold text-dark small">
+                            <i class="fa-solid fa-user-check me-1 text-success"></i> 
+                            Đang đăng nhập: 
+                            <span class="text-primary" th:text="${session.account != null ? session.account.fullName : 'Hệ thống Admin'}">Admin</span>
+                        </div>
+                        <div class="text-muted fs-7" th:if="${session.account != null}">
+                            <span class="me-3"><strong>Email:</strong> <span th:text="${session.account.email}">email@example.com</span></span>
+                            <span><strong>Quyền:</strong> 
+                                <span class="badge bg-primary" th:if="${session.account.roleid == 1}">Admin</span>
+                                <span class="badge bg-info" th:if="${session.account.roleid == 2}">Manager</span>
+                                <span class="badge bg-secondary" th:if="${session.account.roleid != 1 and session.account.roleid != 2}">User</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-3 text-secondary border-opacity-25">
+            <div class="text-center text-muted fs-8">
+                &copy; 2026 Admin Category CRUD System | Powered by Spring Boot & Thymeleaf Engine.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

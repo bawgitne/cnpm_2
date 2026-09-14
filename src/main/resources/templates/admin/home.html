@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/admin_layout}">
+<head>
+    <title>Trang Chủ Quản Trị - Admin Dashboard</title>
+</head>
+<body>
+
+    <div layout:fragment="content">
+        
+        <!-- Welcome Hero Banner -->
+        <div class="card bg-primary text-white border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
+            <div class="card-body p-4 p-lg-5">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <span class="badge bg-white text-primary fw-bold text-uppercase px-3 py-2 rounded-pill mb-3">
+                            <i class="fa-solid fa-sparkles me-1"></i> Thymeleaf Engine & JPA Integration
+                        </span>
+                        <h2 class="fw-bold mb-2">
+                            Xin chào, <span th:text="${session.account != null ? session.account.fullName : 'Admin'}">Admin</span>!
+                        </h2>
+                        <p class="lead opacity-90 mb-0">Hệ thống quản trị danh mục sản phẩm kết nối dữ liệu thực từ MySQL qua Spring Boot & Thymeleaf.</p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end d-none d-lg-block">
+                        <i class="fa-solid fa-chart-line fa-6x opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Stat Cards & Real User Card -->
+        <div class="row g-4 mb-4">
+            
+            <!-- Category Stat Card -->
+            <div class="col-md-6 col-xl-4">
+                <div class="card card-custom h-100 border-start border-4 border-primary">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="text-uppercase text-muted fw-bold fs-8" style="letter-spacing: 1px;">Quản Lý Danh Mục</span>
+                                <h2 class="fw-bold text-dark mb-0 mt-1" th:text="${totalCategories}">0</h2>
+                            </div>
+                            <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-circle">
+                                <i class="fa-solid fa-layer-group fa-2x"></i>
+                            </div>
+                        </div>
+                        <p class="text-muted small mb-3">Thêm, sửa, xóa, tìm kiếm và phân trang danh mục sản phẩm.</p>
+                        <a th:href="@{/admin/categories}" class="btn btn-primary btn-sm w-100 rounded-pill fw-semibold">
+                            <i class="fa-solid fa-arrow-right me-1"></i> Truy Cập Quản Lý Category
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Stat Card -->
+            <div class="col-md-6 col-xl-4">
+                <div class="card card-custom h-100 border-start border-4 border-success">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="text-uppercase text-muted fw-bold fs-8" style="letter-spacing: 1px;">Quản Lý Sản Phẩm</span>
+                                <h2 class="fw-bold text-dark mb-0 mt-1" th:text="${totalProducts}">0</h2>
+                            </div>
+                            <div class="p-3 bg-success bg-opacity-10 text-success rounded-circle">
+                                <i class="fa-solid fa-box-archive fa-2x"></i>
+                            </div>
+                        </div>
+                        <p class="text-muted small mb-3">Danh sách sản phẩm trong kho và quản lý đơn hàng.</p>
+                        <a th:href="@{/admin/categories}" class="btn btn-outline-success btn-sm w-100 rounded-pill fw-semibold">
+                            <i class="fa-solid fa-arrow-right me-1"></i> Xem Chi Tiết
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real DB User Account Card -->
+            <div class="col-md-12 col-xl-4">
+                <div class="card card-custom h-100 border-start border-4 border-info">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            
+                            <!-- Real Avatar from Session DB (HTTP, Uploaded, or Fallback) -->
+                            <img th:if="${session.account != null and session.account.avatar != null and session.account.avatar.startsWith('http')}"
+                                 th:src="${session.account.avatar}" 
+                                 alt="Avatar" class="rounded-circle border border-2 border-info shadow-sm" width="56" height="56" style="object-fit: cover;">
+                            <img th:if="${session.account != null and session.account.avatar != null and !session.account.avatar.startsWith('http') and !session.account.avatar.isEmpty()}"
+                                 th:src="@{/image(fname=${session.account.avatar})}" 
+                                 alt="Avatar" class="rounded-circle border border-2 border-info shadow-sm" width="56" height="56" style="object-fit: cover;">
+                            <img th:if="${session.account == null or session.account.avatar == null or session.account.avatar.isEmpty()}"
+                                 th:src="@{/images/user.png}" 
+                                 alt="Avatar" class="rounded-circle border border-2 border-info shadow-sm" width="56" height="56" style="object-fit: cover;">
+
+                            <div>
+                                <span class="badge bg-info bg-opacity-10 text-info fw-bold small">Tài Khoản Đang Đăng Nhập</span>
+                                <h5 class="fw-bold text-dark mb-0" th:text="${session.account != null ? session.account.fullName : 'Admin User'}">Admin User</h5>
+                                <small class="text-muted">
+                                    Username: <strong th:text="${session.account != null ? session.account.userName : 'admin'}">admin</strong>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="p-2 bg-light rounded text-muted fs-7 mb-3" th:if="${session.account != null}">
+                            <div class="mb-1"><i class="fa-solid fa-envelope text-primary me-2"></i>Email: <span class="text-dark fw-medium" th:text="${session.account.email}">admin@example.com</span></div>
+                            <div><i class="fa-solid fa-phone text-success me-2"></i>SĐT: <span class="text-dark fw-medium" th:text="${session.account.phone != null ? session.account.phone : 'Chưa cập nhật'}">0900000001</span></div>
+                        </div>
+                        <a th:href="@{/user/profile}" class="btn btn-outline-info btn-sm w-100 rounded-pill fw-semibold">
+                            <i class="fa-solid fa-id-card me-1"></i> Xem & Cập Nhật Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Quick Access Section -->
+        <div class="card card-custom">
+            <div class="card-header-custom d-flex align-items-center gap-2">
+                <i class="fa-solid fa-bolt text-warning"></i>
+                <span class="fw-bold">Thao Tác Nhanh Hệ Thống</span>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <a th:href="@{/admin/categories/add}" class="btn btn-outline-primary p-3 w-100 text-start d-flex align-items-center gap-3 rounded-3">
+                            <i class="fa-solid fa-circle-plus fa-2x text-primary"></i>
+                            <div>
+                                <div class="fw-bold text-dark">Thêm Category Mới</div>
+                                <small class="text-muted">Tạo nhanh danh mục sản phẩm mới</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a th:href="@{/admin/categories}" class="btn btn-outline-secondary p-3 w-100 text-start d-flex align-items-center gap-3 rounded-3">
+                            <i class="fa-solid fa-list-check fa-2x text-secondary"></i>
+                            <div>
+                                <div class="fw-bold text-dark">Danh Sách & Phân Trang</div>
+                                <small class="text-muted">Xem danh sách phân trang danh mục</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a th:href="@{/user/profile}" class="btn btn-outline-info p-3 w-100 text-start d-flex align-items-center gap-3 rounded-3">
+                            <i class="fa-solid fa-user-pen fa-2x text-info"></i>
+                            <div>
+                                <div class="fw-bold text-dark">Chỉnh Sửa Profile</div>
+                                <small class="text-muted">Cập nhật họ tên, SĐT, avatar cá nhân</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

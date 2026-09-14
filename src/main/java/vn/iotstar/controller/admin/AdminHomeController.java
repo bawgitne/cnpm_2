@@ -1,19 +1,37 @@
 package vn.iotstar.controller.admin;
 
-import vn.iotstar.util.Constant;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
-import java.io.IOException;
+import vn.iotstar.service.ICategoryService;
+import vn.iotstar.service.IProductService;
 
-@WebServlet(urlPatterns = "/admin/home")
-public class AdminHomeController extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+@Controller
+public class AdminHomeController {
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        req.getRequestDispatcher(Constant.Path.ADMIN_HOME).forward(req, resp);
+    @Autowired
+    private ICategoryService categoryService;
+
+    @Autowired
+    private IProductService productService;
+
+    @GetMapping("/admin/home")
+    public String adminHome(Model model) {
+        int totalCategories = categoryService.count();
+        int totalProducts = 0;
+        try {
+            if (productService.findAll() != null) {
+                totalProducts = productService.findAll().size();
+            }
+        } catch (Exception e) {
+            totalProducts = 0;
+        }
+
+        model.addAttribute("totalCategories", totalCategories);
+        model.addAttribute("totalProducts", totalProducts);
+
+        return "admin/home";
     }
 }

@@ -22,8 +22,8 @@ import vn.iotstar.service.impl.CategoryServiceImpl;
 import vn.iotstar.util.Constant;
 
 @MultipartConfig()
-@WebServlet(urlPatterns = { "/admin/categories", "/admin/category/add", "/admin/category/insert",
-        "/admin/category/edit", "/admin/category/update", "/admin/category/delete" })
+@WebServlet(urlPatterns = { "/admin/categories-jsp", "/admin/category/add-jsp", "/admin/category/insert-jsp",
+        "/admin/category/edit-jsp", "/admin/category/update-jsp", "/admin/category/delete-jsp" })
 public class CategoryController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ - HighTech E-Commerce</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .brand-logo {
+            font-weight: 700;
+            font-size: 1.35rem;
+            color: #38bdf8 !important;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 3.5rem 2rem;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25);
+        }
+
+        .admin-quick-banner {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            border-left: 5px solid #fbbf24;
+            color: #ffffff;
+            border-radius: 12px;
+        }
+
+        .category-card {
+            border: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .product-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        }
+        .product-img-wrapper {
+            height: 200px;
+            overflow: hidden;
+            background: #f1f5f9;
+        }
+
+        .fs-7 { font-size: 0.85rem; }
+        .fs-8 { font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+
+    <!-- Main Navigation Header -->
+    <header class="navbar navbar-expand-lg navbar-dark main-header sticky-top py-2">
+        <div class="container px-4">
+            <a class="navbar-brand brand-logo d-flex align-items-center gap-2" th:href="@{/}">
+                <i class="fa-solid fa-store text-info"></i> HIGHTECH E-COMMERCE
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link active fw-medium" th:href="@{/}">
+                            <i class="fa-solid fa-house me-1"></i> Trang Chủ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light fw-medium" th:href="@{/admin/categories}">
+                            <i class="fa-solid fa-layer-group me-1"></i> Danh Mục
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav align-items-center gap-3">
+                    
+                    <!-- ADMIN DASHBOARD BUTTON (ONLY VISIBLE IF LOGGED IN USER IS ROLE ADMIN roleid == 1) -->
+                    <li class="nav-item" th:if="${session.account != null and session.account.roleid == 1}">
+                        <a th:href="@{/admin/home}" class="btn btn-warning text-dark fw-bold rounded-pill px-3 py-2 shadow-sm d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-crown text-danger"></i> ADMIN DASHBOARD
+                        </a>
+                    </li>
+
+                    <!-- MANAGER PORTAL BUTTON (IF ROLE IS MANAGER roleid == 2) -->
+                    <li class="nav-item" th:if="${session.account != null and session.account.roleid == 2}">
+                        <a th:href="@{/manager/home}" class="btn btn-info text-white fw-bold rounded-pill px-3 py-2 shadow-sm d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-user-tie"></i> MANAGER PORTAL
+                        </a>
+                    </li>
+
+                    <!-- IF NOT LOGGED IN: SHOW LOGIN & REGISTER BUTTONS -->
+                    <li class="nav-item d-flex gap-2" th:if="${session.account == null}">
+                        <a th:href="@{/login}" class="btn btn-outline-light rounded-pill px-3">
+                            <i class="fa-solid fa-right-to-bracket me-1"></i> Đăng Nhập
+                        </a>
+                        <a th:href="@{/register}" class="btn btn-primary rounded-pill px-3">
+                            <i class="fa-solid fa-user-plus me-1"></i> Đăng Ký
+                        </a>
+                    </li>
+
+                    <!-- IF LOGGED IN: SHOW USER PROFILE DROPDOWN WITH AVATAR FROM DB -->
+                    <li class="nav-item dropdown" th:if="${session.account != null}">
+                        <a class="nav-link dropdown-toggle text-light d-flex align-items-center gap-2 py-1 px-3 bg-dark-subtle rounded-pill border border-secondary border-opacity-25" 
+                           href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            
+                            <!-- Real Avatar from Session DB -->
+                            <img th:if="${session.account.avatar != null and session.account.avatar.startsWith('http')}"
+                                 th:src="${session.account.avatar}" 
+                                 alt="User Avatar" class="rounded-circle border border-2 border-primary" 
+                                 width="34" height="34" style="object-fit: cover;">
+
+                            <img th:if="${session.account.avatar != null and !session.account.avatar.startsWith('http') and !session.account.avatar.isEmpty()}"
+                                 th:src="@{/image(fname=${session.account.avatar})}" 
+                                 alt="User Avatar" class="rounded-circle border border-2 border-primary" 
+                                 width="34" height="34" style="object-fit: cover;">
+
+                            <img th:if="${session.account.avatar == null or session.account.avatar.isEmpty()}"
+                                 th:src="@{/images/user.png}" 
+                                 alt="User Avatar" class="rounded-circle border border-2 border-primary" 
+                                 width="34" height="34" style="object-fit: cover;">
+
+                            <div class="text-start d-none d-sm-block">
+                                <div class="fw-bold fs-7 lh-1 text-white" th:text="${session.account.fullName}">User Name</div>
+                                <small class="text-info fs-8 lh-1" th:text="'@' + ${session.account.userName}">@username</small>
+                            </div>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="userDropdown">
+                            <li class="dropdown-header text-uppercase fw-bold text-muted small">Tài khoản cá nhân</li>
+                            <li>
+                                <a class="dropdown-item py-2" th:href="@{/user/profile}">
+                                    <i class="fa-solid fa-id-card me-2 text-primary"></i>Hồ sơ cá nhân
+                                </a>
+                            </li>
+
+                            <!-- Admin Dashboard shortcut in dropdown -->
+                            <li th:if="${session.account.roleid == 1}">
+                                <a class="dropdown-item py-2 text-warning fw-bold" th:href="@{/admin/home}">
+                                    <i class="fa-solid fa-crown me-2"></i>Admin Dashboard
+                                </a>
+                            </li>
+
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item py-2 text-danger" th:href="@{/logout}">
+                                    <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Đăng xuất
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container Content -->
+    <main class="container px-4 py-4 flex-grow-1">
+
+        <!-- ADMIN SPECIAL QUICK ACCESS BANNER (ONLY DISPLAYED IF LOGGED IN USER IS ADMIN) -->
+        <div class="admin-quick-banner p-4 mb-4 shadow-sm" th:if="${session.account != null and session.account.roleid == 1}">
+            <div class="row align-items-center gy-3">
+                <div class="col-md-8">
+                    <h5 class="fw-bold text-warning mb-1 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-shield-halved"></i> QUYỀN QUẢN TRỊ VIÊN (ADMIN PORTAL)
+                    </h5>
+                    <p class="mb-0 text-light opacity-90 small">
+                        Tài khoản <strong><span th:text="${session.account.fullName}">Admin</span></strong> đang có quyền Admin hệ thống. Bạn có thể truy cập ngay trang Dashboard hoặc Quản lý Category Thymeleaf.
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end d-flex gap-2 justify-content-md-end">
+                    <a th:href="@{/admin/home}" class="btn btn-warning fw-bold px-3 py-2 rounded-pill shadow-sm">
+                        <i class="fa-solid fa-crown me-1"></i> Admin Dashboard
+                    </a>
+                    <a th:href="@{/admin/categories}" class="btn btn-outline-light fw-bold px-3 py-2 rounded-pill">
+                        <i class="fa-solid fa-layer-group me-1"></i> Quản Lý Category
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Section Banner -->
+        <div class="hero-section mb-5">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="badge bg-white text-primary fw-bold text-uppercase px-3 py-2 rounded-pill mb-3">
+                        <i class="fa-solid fa-bolt me-1"></i> Spring Boot & Thymeleaf Platform
+                    </span>
+                    <h1 class="display-5 fw-bold mb-3">Hệ Thống Mua Sắm HighTech E-Commerce</h1>
+                    <p class="lead opacity-90 mb-4">Trải nghiệm ứng dụng Web chuẩn MVC 3 tầng kết nối MySQL, Thymeleaf Template Engine và quản lý danh mục chuyên nghiệp.</p>
+                    
+                    <div class="d-flex flex-wrap gap-3">
+                        <a th:href="@{/admin/categories}" class="btn btn-light btn-lg rounded-pill fw-bold text-primary px-4 shadow">
+                            <i class="fa-solid fa-layer-group me-2"></i> Khám Phá Category
+                        </a>
+                        <a th:if="${session.account != null and session.account.roleid == 1}" 
+                           th:href="@{/admin/home}" class="btn btn-warning btn-lg rounded-pill fw-bold text-dark px-4 shadow">
+                            <i class="fa-solid fa-crown me-2"></i> Admin Dashboard
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center d-none d-lg-block">
+                    <i class="fa-solid fa-laptop-code fa-10x opacity-25"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Section -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold text-dark mb-1">
+                    <i class="fa-solid fa-layer-group text-primary me-2"></i>Danh Mục Nổi Bật (Categories)
+                </h3>
+                <p class="text-muted small mb-0">Dữ liệu danh mục thực từ CSDL MySQL</p>
+            </div>
+            <a th:href="@{/admin/categories}" class="btn btn-outline-primary rounded-pill btn-sm px-3 fw-semibold">
+                Xem Tất Cả Phân Trang <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <!-- Category Grid -->
+        <div class="row g-4 mb-5">
+            <div class="col-6 col-md-4 col-lg-2" th:each="cate : ${categories}">
+                <div class="card category-card text-center p-3 h-100">
+                    <div class="rounded-circle mx-auto overflow-hidden border mb-3" style="width: 64px; height: 64px;">
+                        <img th:if="${cate.images != null and cate.images.startsWith('http')}" 
+                             th:src="${cate.images}" 
+                             alt="Cate Image" class="w-100 h-100 object-fit-cover">
+                        <img th:if="${cate.images != null and !cate.images.startsWith('http') and !cate.images.isEmpty()}" 
+                             th:src="@{/image(fname=${cate.images})}" 
+                             alt="Cate Image" class="w-100 h-100 object-fit-cover">
+                        <img th:if="${cate.images == null or cate.images.isEmpty()}" 
+                             th:src="@{/images/user.png}" 
+                             alt="Default Image" class="w-100 h-100 object-fit-cover">
+                    </div>
+                    <h6 class="fw-bold text-dark fs-7 mb-1" th:text="${cate.categoryname}">Category Name</h6>
+                    <span th:if="${cate.status == 1}" class="badge bg-success bg-opacity-10 text-success fs-8">Hoạt động</span>
+                    <span th:if="${cate.status != 1}" class="badge bg-danger bg-opacity-10 text-danger fs-8">Khóa</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Products Section -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold text-dark mb-1">
+                    <i class="fa-solid fa-fire text-danger me-2"></i>Sản Phẩm Mới Nhất
+                </h3>
+                <p class="text-muted small mb-0">Danh sách sản phẩm công nghệ hot nhất</p>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="row g-4 mb-5">
+            <div class="col-sm-6 col-md-4 col-lg-3" th:each="prod : ${products}">
+                <div class="card product-card h-100">
+                    <div class="product-img-wrapper">
+                        <img th:if="${prod.images != null and prod.images.startsWith('http')}" 
+                             th:src="${prod.images}" alt="Product" class="w-100 h-100 object-fit-cover">
+                        <img th:if="${prod.images != null and !prod.images.startsWith('http') and !prod.images.isEmpty()}" 
+                             th:src="@{/image(fname=${prod.images})}" alt="Product" class="w-100 h-100 object-fit-cover">
+                        <img th:if="${prod.images == null or prod.images.isEmpty()}" 
+                             th:src="@{/images/user.png}" alt="Default" class="w-100 h-100 object-fit-cover">
+                    </div>
+                    <div class="card-body p-3 d-flex flex-direction-column justify-content-between">
+                        <div>
+                            <span class="badge bg-primary bg-opacity-10 text-primary fs-8 mb-2" 
+                                  th:text="${prod.category != null ? prod.category.categoryname : 'Công Nghệ'}">Category</span>
+                            <h6 class="fw-bold text-dark line-clamp-2 mb-2" th:text="${prod.productName}">Product Name</h6>
+                        </div>
+                        <div class="mt-3 d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-danger fs-5" th:text="${'$' + prod.price}">$999</span>
+                            <a th:href="@{/admin/categories}" class="btn btn-sm btn-outline-primary rounded-pill">
+                                <i class="fa-solid fa-cart-plus me-1"></i> Chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto py-4 bg-white border-top shadow-sm">
+        <div class="container px-4">
+            <div class="row align-items-center gy-3">
+                <div class="col-md-6 text-center text-md-start">
+                    <h6 class="fw-bold text-primary mb-1 d-flex align-items-center justify-content-center justify-content-md-start gap-2">
+                        <i class="fa-solid fa-graduation-cap"></i> TRƯỜNG ĐẠI HỌC SƯ PHẠM KỸ THUẬT TP.HCM (HCMUTE)
+                    </h6>
+                    <p class="text-muted small mb-0">
+                        Khoa Công Nghệ Thông Tin - Môn học: Lập Trình Web (WEBPR330479)
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="p-2 px-3 bg-light rounded border d-inline-block text-start">
+                        <div class="fw-bold text-dark small" th:if="${session.account != null}">
+                            <i class="fa-solid fa-user-check me-1 text-success"></i> Đang đăng nhập: 
+                            <span class="text-primary" th:text="${session.account.fullName}">Admin</span>
+                            <span class="badge bg-warning text-dark ms-1" th:if="${session.account.roleid == 1}">Admin Role</span>
+                        </div>
+                        <div class="fw-bold text-muted small" th:if="${session.account == null}">
+                            <i class="fa-solid fa-user-xmark me-1"></i> Chưa đăng nhập
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-3 text-secondary border-opacity-25">
+            <div class="text-center text-muted fs-8">
+                &copy; 2026 HighTech E-Commerce Platform | Powered by Spring Boot & Thymeleaf Engine.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

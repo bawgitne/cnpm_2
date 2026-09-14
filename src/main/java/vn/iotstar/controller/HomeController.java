@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(urlPatterns = "/home")
+@WebServlet(urlPatterns = "/home-jsp")
 public class HomeController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final IProductService productService = new ProductServiceImpl();

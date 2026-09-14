@@ -1,5 +1,6 @@
 package vn.iotstar.service.impl;
 
+import org.springframework.stereotype.Service;
 import vn.iotstar.dao.IProductDao;
 import vn.iotstar.dao.impl.ProductDaoImpl;
 import vn.iotstar.entity.Product;
@@ -7,6 +8,7 @@ import vn.iotstar.service.IProductService;
 
 import java.util.List;
 
+@Service
 public class ProductServiceImpl implements IProductService {
     private final IProductDao productDao = new ProductDaoImpl();
 

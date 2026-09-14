@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+    <!-- Header Fragment -->
+    <header th:fragment="header" class="navbar navbar-expand-lg navbar-dark admin-header sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand admin-brand d-flex align-items-center gap-2" th:href="@{/admin/categories}">
+                <i class="fa-solid fa-layer-group"></i> 
+                <span>THYMELEAF ADMIN PORTAL</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" 
+                    aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="adminNavbar">
+                <ul class="navbar-nav ms-auto align-items-center gap-3">
+                    <li class="nav-item">
+                        <a class="nav-link text-light d-flex align-items-center gap-1" th:href="@{/admin/home}">
+                            <i class="fa-solid fa-house me-1"></i> Trang Chủ Admin
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light d-flex align-items-center gap-1" th:href="@{/admin/categories}">
+                            <i class="fa-solid fa-list-check me-1"></i> Quản Lý Danh Mục
+                        </a>
+                    </li>
+
+                    <!-- Real Logged-in User Profile Header Badge -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light d-flex align-items-center gap-2 py-1 px-3 bg-dark-subtle rounded-pill border border-secondary border-opacity-25" 
+                           href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            
+                            <!-- Case 1: External URL Avatar from DB -->
+                            <img th:if="${session.account != null and session.account.avatar != null and session.account.avatar.startsWith('http')}"
+                                 th:src="${session.account.avatar}" 
+                                 alt="User Avatar" class="rounded-circle border border-2 border-primary" 
+                                 width="36" height="36" style="object-fit: cover;">
+
+                            <!-- Case 2: Uploaded Local Image File from DB via DownloadImageController -->
+                            <img th:if="${session.account != null and session.account.avatar != null and !session.account.avatar.startsWith('http') and !session.account.avatar.isEmpty()}"
+                                 th:src="@{/image(fname=${session.account.avatar})}" 
+                                 alt="User Avatar" class="rounded-circle border border-2 border-primary" 
+                                 width="36" height="36" style="object-fit: cover;">
+
+                            <!-- Case 3: Default Fallback Avatar -->
+                            <img th:if="${session.account == null or session.account.avatar == null or session.account.avatar.isEmpty()}"
+                                 th:src="@{/images/user.png}" 
+                                 alt="User Avatar" class="rounded-circle border border-2 border-primary" 
+                                 width="36" height="36" style="object-fit: cover;">
+
+                            <div class="text-start d-none d-sm-block">
+                                <div class="fw-bold fs-7 lh-1 text-white" 
+                                     th:text="${session.account != null ? session.account.fullName : 'Tài Khoản'}">Admin</div>
+                                <small class="text-info fs-8 lh-1" 
+                                       th:text="${session.account != null ? '@' + session.account.userName : 'Administrator'}">@admin</small>
+                            </div>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="userDropdown">
+                            <li class="dropdown-header text-uppercase fw-bold text-muted small">Tài khoản người dùng</li>
+                            <li>
+                                <a class="dropdown-item py-2" th:href="@{/user/profile}">
+                                    <i class="fa-solid fa-id-card me-2 text-primary"></i>Hồ sơ cá nhân
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2" th:href="@{/admin/home}">
+                                    <i class="fa-solid fa-house me-2 text-info"></i>Trang Chủ Admin
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item py-2 text-danger" th:href="@{/logout}">
+                                    <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Đăng xuất
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+</body>
+</html>
